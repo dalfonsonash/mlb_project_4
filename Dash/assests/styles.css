@@ -1,0 +1,24 @@
+html, body {
+    background-color: lightblue;
+    margin: 0; /* Reset default margin */
+    padding: 0; /* Reset default padding */
+}
+
+/* Apply these styles to the z-score box with the class "z-score-box" */
+.z-score-box {
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    margin-top: 10px;
+    width: fit-content;
+  }
+  
+  /* Apply these styles to the z-score box with the class "z-score-box-green" */
+  .z-score-box-green {
+    color: green;
+  }
+  
+  /* Apply these styles to the z-score box with the class "z-score-box-red" */
+  .z-score-box-red {
+    color: red;
+  }
