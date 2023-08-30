@@ -42,7 +42,10 @@ z_score_box_style_red = {
     "border": "2px solid #3e363f",
     "padding": "4px",  # Red background
 }
-
+player_info_table = dash_table.DataTable(
+    columns=[],  # You can add the columns later in the code
+    data=[]
+)
 
 # Create the Dash app
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -96,7 +99,9 @@ app.layout = html.Div(style=BODY_STYLE, children=[
             
         ]),
         html.Div(id="player-info-container", className="player-info-container"),
-        html.Div(id="output-graphs")
+        html.Div(id="output-graphs"),
+        html.Div(id="player-photo"),
+        player_info_table
     ])
 ])
 
@@ -114,7 +119,8 @@ app.layout = html.Div(style=BODY_STYLE, children=[
      Output("fip-verdict-box", "className"),
      Output("whip-verdict-box", "children"),
      Output("whip-verdict-box", "className"),
-     Output("player-info-container", "children")],
+     Output("player-info-container", "children"),
+     Output("player-photo", "children")],
     [Input("player-name", "value")]
 )
 def update_graphs(name):
@@ -134,6 +140,7 @@ def update_graphs(name):
             "",  # Output "whip-verdict-box.children"
             "z-score-box",  # Output "whip-verdict-box.className"
             [],  # Output "player-info-container.children"
+            None, # Output "player-photo.children" 
         )
 
     player_data = pd.read_csv("full_pitcher_data.csv")
@@ -238,7 +245,20 @@ def update_graphs(name):
         columns=[{"name": col, "id": col} for col in selected_columns],
         data=player_info_rounded.to_dict("records")
     )
+    # Fetch the player's photo URL
+    player_photo_url = player_info["Photo_URL"].values[0]
 
+    # Display the player photo as an image element
+    player_photo = html.Img(
+        src=player_photo_url,
+        style={"max-width": "25%",
+               "height": "auto",
+               "position": "absolute",
+               "right": "400px",
+               "bottom": "40px",
+               }
+        )
+    
     # Return the updated verdict boxes along with other outputs
     return (
         [dcc.Graph(figure=fig)],  # Output "output-graphs.children"
@@ -254,7 +274,8 @@ def update_graphs(name):
         verdict_box_class_fip, # Output "fip-verdict-box.className"
         verdict_box_whip,  # Output "whip-verdict-box.children"
         verdict_box_class_whip, # Output "whip-verdict-box.className"
-        [player_info_table]  # Output "player-info-container.children"
+        [player_info_table],  # Output "player-info-container.children"
+        player_photo  # Output "player-photo.children"
     )
 if __name__ == "__main__":
     app.run_server(debug=True)
