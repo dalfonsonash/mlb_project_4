@@ -51,7 +51,7 @@ player_info_table = dash_table.DataTable(
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(style=BODY_STYLE, children=[
-    html.H1("Baseball Player Dashboard"),
+    html.H1("MLB Pitcher Dashboard"),
     dcc.Input(id="player-name", type="text", placeholder="Enter player's name"),
     html.Div(id="output-container", children=[
         html.Div(id="output-differences", style={
@@ -153,7 +153,7 @@ def update_graphs(name):
         return [html.Div("Player not found")], [], "z-score-box", [], "z-score-box", [], "z-score-box", [], "z-score-box", "", "z-score-box", "", "z-score-box", "", "z-score-box", "", "z-score-box", [html.Div()]
 
     # Create a 2x2 grid of subplots
-    fig = make_subplots(rows=2, cols=2, subplot_titles=["Avg. ERA  /  ERA", "Avg. FIP  /  FIP 2023", 
+    fig = make_subplots(rows=2, cols=2, subplot_titles=["Avg. ERA  /  ERA 2023", "Avg. FIP  /  FIP 2023", 
                                                         "Avg. WHIP  /  WHIP 2023"],
                         shared_xaxes=False, horizontal_spacing=0.1)
 
