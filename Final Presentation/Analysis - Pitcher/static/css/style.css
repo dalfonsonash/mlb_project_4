@@ -1,0 +1,191 @@
+.jumbotron {
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Update align-items to flex-start */
+    background-color: #e1ad01;
+    padding: 20px 20px 10px;
+    border-radius: 5px;
+    font-family: 'Alfa Slab One', cursive;
+    color: #1f1f20;
+}
+
+.jumbotron h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #1f1f20;
+}
+
+.jumbotron p:first-of-type {
+    font-size: 30px;
+    font-family: 'Alfa Slab One,' cursive;
+    color: #1f1f20;
+    text-align: right;
+    align-self: flex-end;
+}
+
+.jumbotron p:nth-of-type(2) {
+    font-size: 22px;
+    font-family: 'Alfa Slab One', cursive;
+    text-align: right;
+    align-self: flex-end; /* Update align-self to flex-end */
+}
+
+body {
+    background-color: #bcbbbb; /* Replace with your preferred shade of gray */
+}
+
+h1, h2 {
+    font-family: 'Alfa Slab One', cursive;
+    text-align: center;
+}
+
+h3, h4 {
+    font-family: 'Alfa Slab One', cursive;
+    text-align: left;
+    font-size: 18px;
+}
+
+li {font-family: 'Special Elite', cursive;
+    color: #1f1f20;
+    font-size: 16px;
+    margin-bottom: 1.5em;
+
+}
+
+/* Font styles for paragraphs */
+p {
+    font-family: 'Special Elite', cursive;
+    color: #1f1f20;
+    font-size: 18px;
+    margin-bottom: 1.25em; /* Adjust this value for spacing */
+}
+
+.centered-section {
+    text-align: center;
+}
+
+.image-container {
+        text-align: center;
+}
+
+pre {
+    background-color: #dadada;
+    padding: 10px;
+    border: 1px solid #444444;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    width: 75%; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the code block horizontally */
+}
+code {
+    display: block;
+}
+
+.link-button {
+    font-family: 'Alfa Slab One', cursive;
+    font-size: 14px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px solid #1f1f20;
+    border-radius: 5px;
+    color: #1f1f20;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.link-button:hover {
+    background-color: #e1ad01;
+    color: #1f1f20;
+    border-color: #1f1f20;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.ball-button {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 80px; /* Increased margin for more space */
+    transition: transform 0.3s ease;
+}
+
+.big-ball-button{position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 80px; /* Increased margin for more space */
+    transition: transform 0.3s ease;
+}
+
+.ball-button img {
+    margin-top: 15px;
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease;
+}
+
+.ball-button:hover img {
+    transform: scale(1.2);
+}
+.big-ball-button img {
+    width: 80px;
+    height: 80px;
+    transition: transform 0.3s ease;
+}
+
+.big-ball-button:hover img {
+    transform: scale(1.2);
+}
+
+.button-text {
+    position: absolute;
+    top: -40px;
+    left: 25%;
+    transform: translateX(-50%);
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    background-color: #e1ad01;
+    font-family: 'Alfa Slab One', cursive;
+    color: #1f1f20;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.big-button-text {
+    position: absolute;
+    top: -40px;
+    left: 25%;
+    transform: translateX(-50%);
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    background-color: #e1ad01;
+    font-family: 'Alfa Slab One', cursive;
+    color: #1f1f20;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.ball-button:hover .button-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+.big-ball-button:hover .button-text {
+    opacity: 1;
+    visibility: visible;
+}
