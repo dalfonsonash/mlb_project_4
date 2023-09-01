@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import threading
 
 external_stylesheets = ['https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap']
 
@@ -12,33 +13,33 @@ BODY_STYLE = {
     'backgroundColor': '#e1ad01',
     'margin': '0',
     'padding': '0',
-    'font-family': 'Alfa Slab One, cursive'
+    'fontFamily': 'Alfa Slab One, cursive'
 }
 
 output_differences_style = (
-    "display: flex; justify-content: space-between; margin: 10px 0;"
+    "display: flex; justifyContent: space-between; margin: 10px 0;"
 )
 
 # Define inline styles for the z-score box
 z_score_box_style_base = {
     "padding": "2px",
-    "font-weight": "bold",
-    "font-size": "18",
-    "margin-top": "10px",
+    "fontWeight": "bold",
+    "fontSize": "18",
+    "marginTop": "10px",
     "width": "fit-content",
     "color": '#3e363f',  # Text color
 }
 
 z_score_box_style_green = {
     **z_score_box_style_base,
-    "background-color": "#3f826d",
+    "backgroundColor": "#3f826d",
     "border": "2px solid #3e363f", 
     "padding": "4px", # Green background
 }
 
 z_score_box_style_red = {
     **z_score_box_style_base,
-    "background-color": "#e2725b",
+    "backgroundColor": "#e2725b",
     "border": "2px solid #3e363f",
     "padding": "4px",  # Red background
 }
@@ -51,60 +52,84 @@ player_info_table = dash_table.DataTable(
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(style=BODY_STYLE, children=[
-    html.H1("MLB Pitcher Dashboard"),
-    dcc.Input(id="player-name", type="text", placeholder="Enter player's name"),
+   html.Div(className="dashboard-background", style={
+        "background-image": "url('../Images/baseball-1222404_1280.jpg')",
+        "background-size": "cover",
+        "background-repeat": "no-repeat",
+        "margin": "0px",
+        "padding": "0px",
+        "font-family": "Alfa Slab One, cursive"
+    }, children=[  # Apply the class here
+    html.H1("MLB Starter Pitcher Dashboard"),
+    dcc.Input(id="player-name", type="text", placeholder="Enter player's name", value=""),
     html.Div(id="output-container", children=[
         html.Div(id="output-differences", style={
             "display": "flex",
-            "justify-content": "space-between",
+            "justifyContent": "space-between",
             "margin": "10px 0",
         }, children=[
             html.Div(id="era-difference-box", className="z-score-box", style={
                 **z_score_box_style_base,
                 "flex": "1",
-                "margin-right": "10px",
+                "marginRight": "10px",
             }),
             html.Div(id="fip-difference-box", className="z-score-box", style={
                 **z_score_box_style_base,
                 "flex": "1",
-                "margin-right": "10px",
+                "marginRight": "10px",
             }),
             html.Div(id="whip-difference-box", className="z-score-box", style={
                 **z_score_box_style_base,
                 "flex": "1",
-                "margin-right": "10px",
+                "marginRight": "10px",
             }),
         ]),
-        # Adding the four verdict boxes
+        # Adding the three verdict boxes
         html.Div(id="verdict-boxes", style={
             "display": "flex",
-            "justify-content": "space-between",
+            "justifyContent": "space-between",
             "margin": "10px 0",
         }, children=[
             html.Div(id="era-verdict-box", className="verdict-box", style={
                 **z_score_box_style_base ,
                 "flex": "1",
-                "margin-right": "10px",
+                "marginRight": "10px",
             }),
             html.Div(id="fip-verdict-box", className="verdict-box", style={
                 **z_score_box_style_base ,
                 "flex": "1",
-                "margin-right": "10px",
+                "marginRight": "10px",
             }),
             html.Div(id="whip-verdict-box", className="verdict-box", style={
                 **z_score_box_style_base ,
                 "flex": "1",
-                "margin-right": "10px",
+                "marginRight": "10px",
             }),
             
         ]),
         html.Div(id="player-info-container", className="player-info-container"),
         html.Div(id="output-graphs"),
-        html.Div(id="player-photo"),
+        html.Div(id="player-photo", className="dashboard-container",children=[]),
         player_info_table
+        ])
     ])
 ])
 
+# Define the debounce function
+def debounce(interval):
+    def decorator(fn):
+        def debounced(*args, **kwargs):
+            def call_it():
+                fn(*args, **kwargs)
+            if hasattr(debounced, '_timer'):
+                debounced._timer.cancel()
+            debounced._timer = threading.Timer(interval / 1000, call_it)
+            debounced._timer.start()
+        return debounced
+    return decorator
+
+# Apply debounce to the callback
+@debounce(1000)  # 1-second debounce interval
 @app.callback(
     [Output("output-graphs", "children"),
      Output("era-difference-box", "children"),
@@ -123,6 +148,7 @@ app.layout = html.Div(style=BODY_STYLE, children=[
      Output("player-photo", "children")],
     [Input("player-name", "value")]
 )
+
 def update_graphs(name):
     if not name:
         return (
@@ -139,7 +165,7 @@ def update_graphs(name):
             "z-score-box",  # Output "fip-verdict-box.className"
             "",  # Output "whip-verdict-box.children"
             "z-score-box",  # Output "whip-verdict-box.className"
-            [],  # Output "player-info-container.children"
+            [html.Div()],  # Output "player-info-container.children"
             None, # Output "player-photo.children" 
         )
 
@@ -150,7 +176,27 @@ def update_graphs(name):
     verdict_info = verdict_data[verdict_data["Name"].str.contains(name, case=False)]
     
     if player_info.empty:
-        return [html.Div("Player not found")], [], "z-score-box", [], "z-score-box", [], "z-score-box", [], "z-score-box", "", "z-score-box", "", "z-score-box", "", "z-score-box", "", "z-score-box", [html.Div()]
+        return (
+            [html.Div("Player not found")], 
+            [], 
+            "z-score-box", 
+            [], 
+            "z-score-box", 
+            [], 
+            "z-score-box", 
+            [], 
+            "z-score-box", 
+            "", 
+            "z-score-box", 
+            "", 
+            "z-score-box", 
+            "", 
+            "z-score-box", 
+            "", 
+            "z-score-box", 
+            [html.Div()],
+            None,
+        )
 
     # Create a 2x2 grid of subplots
     fig = make_subplots(rows=2, cols=2, subplot_titles=["Avg. ERA  /  ERA 2023", "Avg. FIP  /  FIP 2023", 
@@ -248,17 +294,21 @@ def update_graphs(name):
     # Fetch the player's photo URL
     player_photo_url = player_info["Photo_URL"].values[0]
 
+    # Check if a photo URL exists.
+    if player_photo_url:
     # Display the player photo as an image element
-    player_photo = html.Img(
-        src=player_photo_url,
-        style={"max-width": "25%",
-               "height": "auto",
-               "position": "absolute",
-               "right": "400px",
-               "bottom": "40px",
-               }
+        player_photo = html.Img(
+            src=player_photo_url,
+            style={"maxWidth": "25%",
+                "height": "300px",
+                "position": "absolute",
+                "right": "300px",
+                "bottom": "40px",
+                }
         )
-    
+    else:
+    # If no photo URL, set player_photo to None
+        player_photo = None
     # Return the updated verdict boxes along with other outputs
     return (
         [dcc.Graph(figure=fig)],  # Output "output-graphs.children"
